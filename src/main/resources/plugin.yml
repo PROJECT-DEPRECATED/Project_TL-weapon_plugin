@@ -1,0 +1,10 @@
+name: ${project.name}
+author: $pluginAuthor
+version: $pluginVersion
+api-version: 1.16
+main: $pluginMain
+
+commands:
+  weapon:
+    description: This is main command
+    usage: /weapon <type>
