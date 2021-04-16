@@ -16,7 +16,7 @@ import org.projecttl.plugin.weapon.utils.Pistol
 
 class PistolListener(private var plugin: WeaponPlugin): Listener {
 
-    val shootLimit: HashMap<String, Boolean> = HashMap()
+    private var shootLimit: HashMap<String, Boolean> = HashMap()
 
     @EventHandler
     fun onEvent(event: PlayerInteractEvent) {
