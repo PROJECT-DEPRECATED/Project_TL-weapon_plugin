@@ -39,7 +39,7 @@ class WeaponPlugin: JavaPlugin() {
     }
 
     private fun load() {
-        getFile = File("plugin.yml").also {
+        getFile = File(dataFolder, "config.yml").also {
             if (!it.exists()) {
                 configuration?.save(it)
                 configuration?.set("weapon.cooldown", false)

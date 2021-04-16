@@ -1,7 +1,6 @@
 package org.projecttl.plugin.weapon.utils
 
 import org.bukkit.ChatColor
-import org.bukkit.Effect
 import org.bukkit.Sound
 import org.bukkit.entity.Player
 import org.bukkit.potion.PotionEffect
