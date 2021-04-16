@@ -39,7 +39,7 @@ class Skills(private val plugin: WeaponPlugin) {
                     plugin.weaponConfig().set("weapon.cooldown", false)
                     player.sendMessage("<Skill_Manager> ${ChatColor.GOLD}You're cooldown is end!")
                 }
-            }.runTaskLater(plugin, cooldownTime.toLong())
+            }.runTaskLater(plugin, cooldownTime.toLong() * 20)
 
         } else {
             player.sendMessage("<Skill_Manager> ${ChatColor.GOLD}You can use the skill $cooldownTime seconds from the time you use it.")
