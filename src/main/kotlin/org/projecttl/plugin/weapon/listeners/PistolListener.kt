@@ -22,8 +22,11 @@ class PistolListener(private var plugin: WeaponPlugin): Listener {
         val playerMainHand = player.inventory.itemInMainHand
 
         if (action == Action.RIGHT_CLICK_AIR && action == Action.RIGHT_CLICK_BLOCK) {
+            player.sendMessage("Debug")
             if (player.name == "Project_TL" && playerMainHand.type == Pistol.itemStack().type) {
+                player.sendMessage("Debug")
                 if (playerMainHand.itemMeta.displayName == Pistol.getItemName() && playerMainHand.itemMeta.customModelData == Pistol.getCustomModelData()) {
+                    player.sendMessage("Debug")
                     val bullet: Projectile = player.launchProjectile(Arrow::class.java).let { bullet ->
                         bullet.velocity = player.location.direction.multiply(1.5)
                         bullet
