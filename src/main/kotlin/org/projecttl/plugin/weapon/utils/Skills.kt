@@ -11,12 +11,12 @@ import org.projecttl.plugin.weapon.WeaponPlugin
 
 class Skills(private val plugin: WeaponPlugin) {
 
-    private var coolDown = false
+    var coolDown = plugin.weaponConfig().getBoolean("weapon.cooldown")
     private var coolTime = 30 * 20
 
     fun powerBooster(player: Player) {
         if (!coolDown) {
-            coolDown = true
+            plugin.weaponConfig().set("weapon.cooldown", true)
 
             player.run {
                 setCooldown(Sword.itemStack().type, 0)
@@ -34,7 +34,7 @@ class Skills(private val plugin: WeaponPlugin) {
 
             object : BukkitRunnable() {
                 override fun run() {
-                    coolDown = false
+                    plugin.weaponConfig().set("weapon.cooldown", false)
                     player.sendMessage("<Skill_Manager> ${ChatColor.GOLD}You're cooldown is end!")
                 }
             }.runTaskLater(plugin, (120 * 20).toLong())

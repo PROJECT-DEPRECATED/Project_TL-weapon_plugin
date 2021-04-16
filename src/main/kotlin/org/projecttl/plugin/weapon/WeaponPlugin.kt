@@ -7,6 +7,7 @@ import org.projecttl.plugin.weapon.commands.SpawnWeapon
 import org.projecttl.plugin.weapon.commands.arguments.ArgumentSpawnWeapon
 import org.projecttl.plugin.weapon.listeners.KnifeListener
 import org.projecttl.plugin.weapon.listeners.PistolListener
+import org.projecttl.plugin.weapon.utils.Skills
 import java.io.File
 
 class WeaponPlugin: JavaPlugin() {
@@ -41,6 +42,7 @@ class WeaponPlugin: JavaPlugin() {
         getFile = File("plugin.yml").also {
             if (!it.exists()) {
                 configuration?.save(it)
+                configuration?.set("weapon.cooldown", false)
             }
 
             configuration?.load(it)
