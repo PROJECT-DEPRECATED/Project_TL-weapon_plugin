@@ -18,7 +18,7 @@ class KnifeListener(private val plugin: WeaponPlugin): Listener {
 
         val skills = Skills(plugin)
 
-        if (action == Action.RIGHT_CLICK_AIR && action == Action.RIGHT_CLICK_BLOCK) {
+        if (action == Action.RIGHT_CLICK_AIR || action == Action.RIGHT_CLICK_BLOCK) {
             if (player.name == WeaponPlugin.target && mainHand.type == Sword.itemStack().type) {
                 if (mainHand.itemMeta.displayName == Sword.itemName() && mainHand.itemMeta.customModelData == Sword.customModelData()) {
                     skills.powerBooster(player)
