@@ -14,15 +14,15 @@ class Pistol {
 
         fun giveItem(player: Player) {
             val meta = itemType.itemMeta.let {
-                it.setLocalizedName(itemName)
+                it.setDisplayName(itemName)
                 it.lore = itemLore
-
                 it.setCustomModelData(customModelData)
+
+                itemType.itemMeta = it
 
                 it
             }
 
-            itemType.itemMeta = meta
             player.inventory.addItem(itemType)
         }
 
