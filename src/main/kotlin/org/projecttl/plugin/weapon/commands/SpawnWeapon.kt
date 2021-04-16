@@ -39,7 +39,7 @@ class SpawnWeapon(private val plugin: WeaponPlugin): CommandExecutor {
                         when (args[0]) {
                             "cooldown" -> {
                                 val time: Int = Integer.parseInt(args[1])
-                                plugin.weaponConfig().set("weapon.cooltime", args[1])
+                                plugin.weaponConfig().set("weapon.cooltime", time)
 
                                 sender.sendMessage("<Skill_Manager> ${ChatColor.GREEN}Your cooldown time is $time seconds")
 
