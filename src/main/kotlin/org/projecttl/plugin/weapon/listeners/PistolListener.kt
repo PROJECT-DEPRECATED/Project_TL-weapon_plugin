@@ -7,10 +7,12 @@ import org.bukkit.entity.Projectile
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.block.Action
+import org.bukkit.event.entity.ProjectileHitEvent
 import org.bukkit.event.player.PlayerInteractEvent
+import org.projecttl.plugin.weapon.WeaponPlugin
 import org.projecttl.plugin.weapon.utils.Pistol
 
-class PistolListener: Listener {
+class PistolListener(private var plugin: WeaponPlugin): Listener {
 
     @EventHandler
     fun onEvent(event: PlayerInteractEvent) {
@@ -24,17 +26,20 @@ class PistolListener: Listener {
                 if (playerMainHand.itemMeta.displayName == Pistol.getItemName() && playerMainHand.itemMeta.customModelData == Pistol.getCustomModelData()) {
                     val bullet: Projectile = player.launchProjectile(Arrow::class.java).let { bullet ->
                         bullet.velocity = player.location.direction.multiply(1.5)
-                        bullet.world.playEffect(bullet.location, Effect.SMOKE, 10)
-
                         bullet
                     }
 
-                    bullet.world.playSound(
-                        player.location,
-                        Sound.ENTITY_FIREWORK_ROCKET_LARGE_BLAST,
-                        100.toFloat(),
-                        1.toFloat()
-                    )
+                    with(bullet) {
+                        world.playEffect(bullet.location, Effect.SMOKE, 10)
+                        world.playSound(
+                            player.location,
+                            Sound.ENTITY_FIREWORK_ROCKET_LARGE_BLAST,
+                            100.toFloat(),
+                            1.toFloat()
+                        )
+                    }
+
+                    event.isCancelled = true
                 }
             }
         }

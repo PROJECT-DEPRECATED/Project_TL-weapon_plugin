@@ -19,7 +19,7 @@ class WeaponPlugin: JavaPlugin() {
 
         getCommand("weapon")?.setExecutor(SpawnWeapon())
 
-        manager.registerEvents(PistolListener(), this)
+        manager.registerEvents(PistolListener(this), this)
     }
 
     override fun onDisable() {
