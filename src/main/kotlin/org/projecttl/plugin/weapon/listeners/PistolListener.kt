@@ -21,7 +21,7 @@ class PistolListener(private var plugin: WeaponPlugin): Listener {
 
         val playerMainHand = player.inventory.itemInMainHand
 
-        if (action == Action.RIGHT_CLICK_AIR && action == Action.RIGHT_CLICK_BLOCK) {
+        if (action == Action.RIGHT_CLICK_AIR || action == Action.RIGHT_CLICK_BLOCK) {
             player.sendMessage("Debug")
             if (player.name == "Project_TL" && playerMainHand.type == Pistol.itemStack().type) {
                 player.sendMessage("Debug")
