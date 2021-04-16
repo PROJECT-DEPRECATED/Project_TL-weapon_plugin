@@ -28,10 +28,8 @@ class WeaponPlugin: JavaPlugin() {
             it.tabCompleter = ArgumentSpawnWeapon()
         }
 
-        manager.also {
-            it.registerEvents(PistolListener(this), this)
-            it.registerEvents(KnifeListener(this), this)
-        }
+        manager.registerEvents(PistolListener(this), this)
+        manager.registerEvents(KnifeListener(this), this)
     }
 
     override fun onDisable() {

@@ -2,6 +2,7 @@ package org.projecttl.plugin.weapon.utils
 
 import org.bukkit.ChatColor
 import org.bukkit.Effect
+import org.bukkit.Sound
 import org.bukkit.entity.Player
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
@@ -9,7 +10,6 @@ import org.bukkit.scheduler.BukkitRunnable
 import org.projecttl.plugin.weapon.WeaponPlugin
 
 class Skills(private val plugin: WeaponPlugin) {
-
 
     private var coolDown = false
     private var coolTime = 30 * 20
@@ -20,7 +20,7 @@ class Skills(private val plugin: WeaponPlugin) {
 
             player.run {
                 setCooldown(Sword.itemStack().type, 0)
-                playEffect(location, Effect.SMOKE, 10)
+                playSound(player.location, Sound.ITEM_TOTEM_USE, 100F, 100F)
             }
 
             player.addPotionEffects(
