@@ -16,13 +16,13 @@ class Pistol {
             val meta = itemType.itemMeta.let {
                 it.setDisplayName(itemName)
                 it.lore = itemLore
-                it.setCustomModelData(customModelData)
 
-                itemType.itemMeta = it
+                it.setCustomModelData(customModelData)
 
                 it
             }
 
+            itemType.itemMeta = meta
             player.inventory.addItem(itemType)
         }
 

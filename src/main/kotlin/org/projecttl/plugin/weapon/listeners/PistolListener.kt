@@ -4,6 +4,7 @@ import org.bukkit.Effect
 import org.bukkit.Sound
 import org.bukkit.entity.Arrow
 import org.bukkit.entity.Projectile
+import org.bukkit.entity.Snowball
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.block.Action
@@ -27,7 +28,7 @@ class PistolListener(private var plugin: WeaponPlugin): Listener {
                 player.sendMessage("Debug")
                 if (playerMainHand.itemMeta.displayName == Pistol.getItemName() && playerMainHand.itemMeta.customModelData == Pistol.getCustomModelData()) {
                     player.sendMessage("Debug")
-                    val bullet: Projectile = player.launchProjectile(Arrow::class.java).let { bullet ->
+                    val bullet: Projectile = player.launchProjectile(Snowball::class.java).let { bullet ->
                         bullet.velocity = player.location.direction.multiply(1.5)
                         bullet
                     }
