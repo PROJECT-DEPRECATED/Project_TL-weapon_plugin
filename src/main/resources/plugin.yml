@@ -7,4 +7,4 @@ main: $pluginMain
 commands:
   weapon:
     description: This is main command
-    usage: /weapon <type>
+    usage: /weapon <type> or /weapon <options> <duration>

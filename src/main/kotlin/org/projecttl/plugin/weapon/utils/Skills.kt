@@ -11,8 +11,10 @@ import org.projecttl.plugin.weapon.WeaponPlugin
 
 class Skills(private val plugin: WeaponPlugin) {
 
-    var coolDown = plugin.weaponConfig().getBoolean("weapon.cooldown")
-    private var coolTime = 30 * 20
+    private var coolDown = plugin.weaponConfig().getBoolean("weapon.cooldown")
+    private var duration = plugin.weaponConfig().getInt("weapon.duration") * 20
+
+    private var cooldownTime = plugin.weaponConfig().getInt("weapon.cooltime")
 
     fun powerBooster(player: Player) {
         if (!coolDown) {
@@ -25,10 +27,10 @@ class Skills(private val plugin: WeaponPlugin) {
 
             player.addPotionEffects(
                 mutableListOf(
-                    PotionEffect(PotionEffectType.SPEED, coolTime, 5, true),
-                    PotionEffect(PotionEffectType.JUMP, coolTime, 3, true),
-                    PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, coolTime, 10, true),
-                    PotionEffect(PotionEffectType.NIGHT_VISION, coolTime, 1, true),
+                    PotionEffect(PotionEffectType.SPEED, duration, 5, true),
+                    PotionEffect(PotionEffectType.JUMP, duration, 3, true),
+                    PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, duration, 10, true),
+                    PotionEffect(PotionEffectType.NIGHT_VISION, duration, 1, true),
                 )
             )
 
@@ -37,10 +39,10 @@ class Skills(private val plugin: WeaponPlugin) {
                     plugin.weaponConfig().set("weapon.cooldown", false)
                     player.sendMessage("<Skill_Manager> ${ChatColor.GOLD}You're cooldown is end!")
                 }
-            }.runTaskLater(plugin, (120 * 20).toLong())
+            }.runTaskLater(plugin, cooldownTime.toLong())
 
         } else {
-            player.sendMessage("<Skill_Manager> ${ChatColor.GOLD}You can use the skill 2 minutes from the time you use it.")
+            player.sendMessage("<Skill_Manager> ${ChatColor.GOLD}You can use the skill $cooldownTime seconds from the time you use it.")
         }
     }
 }

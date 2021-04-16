@@ -25,7 +25,7 @@ class WeaponPlugin: JavaPlugin() {
         logger.info("Plugin enabled!")
 
         getCommand("weapon")?.also {
-            it.setExecutor(SpawnWeapon())
+            it.setExecutor(SpawnWeapon(this))
             it.tabCompleter = ArgumentSpawnWeapon()
         }
 
