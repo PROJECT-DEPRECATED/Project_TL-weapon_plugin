@@ -38,15 +38,19 @@ class SpawnWeapon(private val plugin: WeaponPlugin): CommandExecutor {
                     args.size == 2 -> {
                         when (args[0]) {
                             "cooldown" -> {
+                                val time: Int = Integer.parseInt(args[1])
                                 plugin.weaponConfig().set("weapon.cooldownTime", args[1])
-                                sender.sendMessage("<Skill_Manager> ${ChatColor.GREEN}Your cooldown time is ${args[1]} seconds")
+
+                                sender.sendMessage("<Skill_Manager> ${ChatColor.GREEN}Your cooldown time is $time seconds")
 
                                 return true
                             }
 
                             "duration" -> {
-                                plugin.weaponConfig().set("weapon.duration", args[1])
-                                sender.sendMessage("<Skill_Manager> ${ChatColor.GREEN}Your effect duration time is ${args[1]} seconds")
+                                val time: Int = Integer.parseInt(args[1])
+                                plugin.weaponConfig().set("weapon.duration", time)
+
+                                sender.sendMessage("<Skill_Manager> ${ChatColor.GREEN}Your effect duration time is $time seconds")
 
                                 return true
                             }
