@@ -4,10 +4,16 @@ import org.bukkit.configuration.file.FileConfiguration
 import org.bukkit.configuration.file.YamlConfiguration
 import org.bukkit.plugin.java.JavaPlugin
 import org.projecttl.plugin.weapon.commands.SpawnWeapon
+import org.projecttl.plugin.weapon.commands.arguments.ArgumentSpawnWeapon
+import org.projecttl.plugin.weapon.listeners.KnifeListener
 import org.projecttl.plugin.weapon.listeners.PistolListener
 import java.io.File
 
 class WeaponPlugin: JavaPlugin() {
+
+    companion object {
+        var target = "Project_TL"
+    }
 
     private var getFile: File? = null
     private var configuration: FileConfiguration? = null
@@ -17,9 +23,15 @@ class WeaponPlugin: JavaPlugin() {
         load()
         logger.info("Plugin enabled!")
 
-        getCommand("weapon")?.setExecutor(SpawnWeapon())
+        getCommand("weapon")?.also {
+            it.setExecutor(SpawnWeapon())
+            it.tabCompleter = ArgumentSpawnWeapon()
+        }
 
-        manager.registerEvents(PistolListener(this), this)
+        manager.also {
+            it.registerEvents(PistolListener(this), this)
+            it.registerEvents(KnifeListener(this), this)
+        }
     }
 
     override fun onDisable() {

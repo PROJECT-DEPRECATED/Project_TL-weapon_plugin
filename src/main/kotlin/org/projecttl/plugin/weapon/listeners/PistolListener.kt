@@ -16,8 +16,6 @@ import org.projecttl.plugin.weapon.utils.Pistol
 
 class PistolListener(private var plugin: WeaponPlugin): Listener {
 
-    private var shootLimit: HashMap<String, Boolean> = HashMap()
-
     @EventHandler
     fun onEvent(event: PlayerInteractEvent) {
         val player = event.player
@@ -25,38 +23,24 @@ class PistolListener(private var plugin: WeaponPlugin): Listener {
 
         val playerMainHand = player.inventory.itemInMainHand
 
-        if (action == Action.RIGHT_CLICK_AIR || action == Action.RIGHT_CLICK_BLOCK) {
-            if (!shootLimit.getValue(player.name)) {
-                if (player.name == "Project_TL" && playerMainHand.type == Pistol.itemStack().type) {
-                    if (playerMainHand.itemMeta.displayName == Pistol.getItemName() && playerMainHand.itemMeta.customModelData == Pistol.getCustomModelData()) {
-                        val bullet: Projectile = player.launchProjectile(Snowball::class.java).let { bullet ->
-                            bullet.velocity = player.location.direction.multiply(3)
-                            bullet
-                        }
+        if (action == Action.LEFT_CLICK_AIR || action == Action.LEFT_CLICK_BLOCK) {
+            if (player.name == WeaponPlugin.target && playerMainHand.type == Pistol.itemStack().type) {
+                if (playerMainHand.itemMeta.displayName == Pistol.getItemName() && playerMainHand.itemMeta.customModelData == Pistol.getCustomModelData()) {
+                    val bullet: Projectile = player.launchProjectile(Snowball::class.java).let { bullet ->
+                        bullet.velocity = player.location.direction.multiply(3)
+                        bullet
+                    }
 
-                        with(bullet) {
-                            world.playEffect(bullet.location, Effect.SMOKE, 10)
-                            world.playSound(
-                                player.location,
-                                Sound.ENTITY_FIREWORK_ROCKET_LARGE_BLAST,
-                                100.toFloat(),
-                                1.toFloat()
-                            )
-                        }
-
-                        shootLimit[player.name] = true
-
-                        object : BukkitRunnable() {
-                            override fun run() {
-                                shootLimit[player.name] = false
-                            }
-                        }.runTaskLater(plugin, (20 * 0.3).toLong())
-
-                        event.isCancelled = true
+                    with(bullet) {
+                        world.playEffect(bullet.location, Effect.SMOKE, 10)
+                        world.playSound(
+                            player.location,
+                            Sound.ENTITY_FIREWORK_ROCKET_LARGE_BLAST,
+                            100.toFloat(),
+                            1.toFloat()
+                        )
                     }
                 }
-            } else {
-                return
             }
         }
     }

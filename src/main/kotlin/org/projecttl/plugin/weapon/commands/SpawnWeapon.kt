@@ -4,6 +4,7 @@ import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
+import org.projecttl.plugin.weapon.WeaponPlugin
 import org.projecttl.plugin.weapon.utils.Pistol
 import org.projecttl.plugin.weapon.utils.Sword
 
@@ -13,7 +14,7 @@ class SpawnWeapon: CommandExecutor {
         if (sender !is Player) {
             return false
         } else {
-            if (command.name == "weapon") {
+            if (command.name == "weapon" && sender.name == WeaponPlugin.target && sender.isOp) {
                 when {
                     args.isNullOrEmpty() -> {
                         return false
