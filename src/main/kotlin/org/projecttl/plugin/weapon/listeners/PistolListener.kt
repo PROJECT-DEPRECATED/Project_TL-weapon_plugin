@@ -34,7 +34,7 @@ class PistolListener(private var plugin: WeaponPlugin): Listener {
                 if (playerMainHand.itemMeta.displayName == Pistol.getItemName() && playerMainHand.itemMeta.customModelData == Pistol.getCustomModelData()) {
                     when {
                         leftAmmo > 0 -> {
-                            shoot(player, plugin)
+                            shoot(player)
                         }
 
                         else -> {
@@ -58,7 +58,7 @@ class PistolListener(private var plugin: WeaponPlugin): Listener {
                         }
 
                         else -> {
-                            reload(player, plugin)
+                            reload(player)
                         }
                     }
                 }
@@ -84,67 +84,65 @@ class PistolListener(private var plugin: WeaponPlugin): Listener {
         }
     }
 
-    companion object {
-        private fun shoot(player: Player, plugin: WeaponPlugin) {
-            val bullet: Projectile = player.launchProjectile(Snowball::class.java).let { bullet ->
-                bullet.velocity = player.location.direction.multiply(5)
-                bullet
-            }
-
-            with(bullet) {
-                world.playEffect(bullet.location, Effect.SMOKE, 10)
-                world.playSound(
-                    player.location,
-                    Sound.ENTITY_FIREWORK_ROCKET_LARGE_BLAST,
-                    100.toFloat(),
-                    1.toFloat()
-                )
-            }
-
-            plugin.bullets.add(bullet.entityId)
-            plugin.weaponConfig().set("weapon.projecttl.pistol", PistolListener(plugin).leftAmmo - 1)
-            player.sendActionBar("${ChatColor.GOLD}Left Bullet: ${ChatColor.GREEN}${PistolListener(plugin).leftAmmo}/${PistolListener(plugin).fixAmmoCount}")
+    private fun shoot(player: Player) {
+        val bullet: Projectile = player.launchProjectile(Snowball::class.java).let { bullet ->
+            bullet.velocity = player.location.direction.multiply(5)
+            bullet
         }
 
-        private fun reload(player: Player, plugin: WeaponPlugin) {
-            with(player) {
-                when {
-                    !PistolListener(plugin).reloading -> {
-                        sendActionBar("${ChatColor.GOLD}Reloading...")
-                        playSound(
-                            this.location,
-                            Sound.BLOCK_IRON_DOOR_OPEN,
-                            100.toFloat(),
-                            2.toFloat()
-                        )
+        with(bullet) {
+            world.playEffect(bullet.location, Effect.SMOKE, 10)
+            world.playSound(
+                player.location,
+                Sound.ENTITY_FIREWORK_ROCKET_LARGE_BLAST,
+                100.toFloat(),
+                1.toFloat()
+            )
+        }
 
-                        plugin.weaponConfig().set("weapon.projecttl.pistol.reload", true)
+        plugin.bullets.add(bullet.entityId)
+        plugin.weaponConfig().set("weapon.projecttl.pistol", PistolListener(plugin).leftAmmo - 1)
+        player.sendActionBar("${ChatColor.GOLD}Left Bullet: ${ChatColor.GREEN}${PistolListener(plugin).leftAmmo}/${PistolListener(plugin).fixAmmoCount}")
+    }
 
-                        inventory.itemInOffHand.subtract(1)
-                        object : BukkitRunnable() {
-                            override fun run() {
-                                playSound(
-                                    player.location,
-                                    Sound.BLOCK_IRON_DOOR_CLOSE,
-                                    100.toFloat(),
-                                    2.toFloat()
-                                )
+    private fun reload(player: Player) {
+        with(player) {
+            when {
+                !PistolListener(plugin).reloading -> {
+                    sendActionBar("${ChatColor.GOLD}Reloading...")
+                    playSound(
+                        this.location,
+                        Sound.BLOCK_IRON_DOOR_OPEN,
+                        100.toFloat(),
+                        2.toFloat()
+                    )
 
-                                plugin.weaponConfig().set("weapon.projecttl.pistol", PistolListener(plugin).fixAmmoCount)
-                                plugin.weaponConfig().set("weapon.projecttl.pistol.reload", false)
-                            }
-                        }.runTaskLater(plugin, (0.5 * 20).toLong())
-                    }
+                    plugin.weaponConfig().set("weapon.projecttl.pistol.reload", true)
 
-                    else -> {
-                        sendMessage("Rocket_Launcher> ${ChatColor.GOLD}You're already reloading!")
-                        playSound(
-                            this.location,
-                            Sound.ENTITY_ENDERMAN_TELEPORT,
-                            100.toFloat(),
-                            1.0.toFloat()
-                        )
-                    }
+                    inventory.itemInOffHand.subtract(1)
+                    object : BukkitRunnable() {
+                        override fun run() {
+                            playSound(
+                                player.location,
+                                Sound.BLOCK_IRON_DOOR_CLOSE,
+                                100.toFloat(),
+                                2.toFloat()
+                            )
+
+                            plugin.weaponConfig().set("weapon.projecttl.pistol", fixAmmoCount)
+                            plugin.weaponConfig().set("weapon.projecttl.pistol.reload", false)
+                        }
+                    }.runTaskLater(plugin, (1 * 20).toLong())
+                }
+
+                else -> {
+                    sendMessage("Rocket_Launcher> ${ChatColor.GOLD}You're already reloading!")
+                    playSound(
+                        this.location,
+                        Sound.ENTITY_ENDERMAN_TELEPORT,
+                        100.toFloat(),
+                        1.0.toFloat()
+                    )
                 }
             }
         }
