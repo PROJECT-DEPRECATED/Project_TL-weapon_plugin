@@ -106,44 +106,43 @@ class PistolListener(private var plugin: WeaponPlugin): Listener {
     }
 
     private fun reload(player: Player) {
-        with(player) {
-            when {
-                !reloading -> {
-                    sendActionBar("${ChatColor.GOLD}Reloading...")
-                    playSound(
-                        this.location,
-                        Sound.BLOCK_IRON_DOOR_OPEN,
-                        100.toFloat(),
-                        2.toFloat()
-                    )
+        when {
+            !reloading -> {
+                player.sendActionBar("${ChatColor.GOLD}Reloading...")
+                player.playSound(
+                    player.location,
+                    Sound.BLOCK_IRON_DOOR_OPEN,
+                    100.toFloat(),
+                    2.toFloat()
+                )
 
-                    plugin.weaponConfig().set("weapon.projecttl.pistol.reload", true)
+                plugin.weaponConfig().set("weapon.projecttl.pistol.reload", true)
 
-                    object : BukkitRunnable() {
-                        override fun run() {
-                            playSound(
-                                player.location,
-                                Sound.BLOCK_IRON_DOOR_CLOSE,
-                                100.toFloat(),
-                                2.toFloat()
-                            )
+                object : BukkitRunnable() {
+                    override fun run() {
+                        player.playSound(
+                            player.location,
+                            Sound.BLOCK_IRON_DOOR_CLOSE,
+                            100.toFloat(),
+                            2.toFloat()
+                        )
 
-                            plugin.weaponConfig().set("weapon.projecttl.pistol", 12)
-                            plugin.weaponConfig().set("weapon.projecttl.pistol.reload", false)
-                        }
-                    }.runTaskLater(plugin, (1 * 20).toLong())
-                }
+                        plugin.weaponConfig().set("weapon.projecttl.pistol", 12)
+                        plugin.weaponConfig().set("weapon.projecttl.pistol.reload", false)
+                    }
+                }.runTaskLater(plugin, (1 * 20).toLong())
+            }
 
-                else -> {
-                    sendMessage("Rocket_Launcher> ${ChatColor.GOLD}You're already reloading!")
-                    playSound(
-                        this.location,
-                        Sound.ENTITY_ENDERMAN_TELEPORT,
-                        100.toFloat(),
-                        1.0.toFloat()
-                    )
-                }
+            else -> {
+                player.sendMessage("Rocket_Launcher> ${ChatColor.GOLD}You're already reloading!")
+                player.playSound(
+                    player.location,
+                    Sound.ENTITY_ENDERMAN_TELEPORT,
+                    100.toFloat(),
+                    1.0.toFloat()
+                )
             }
         }
+    }
     }
 }
