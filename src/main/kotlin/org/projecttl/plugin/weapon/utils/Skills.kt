@@ -30,6 +30,8 @@ class Skills(private val plugin: WeaponPlugin) {
                     PotionEffect(PotionEffectType.JUMP, duration, 3, true),
                     PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, duration, 10, true),
                     PotionEffect(PotionEffectType.NIGHT_VISION, duration, 1, true),
+                    PotionEffect(PotionEffectType.INCREASE_DAMAGE, duration, 5, true),
+                    PotionEffect(PotionEffectType.ABSORPTION, duration, 3, true)
                 )
             )
 

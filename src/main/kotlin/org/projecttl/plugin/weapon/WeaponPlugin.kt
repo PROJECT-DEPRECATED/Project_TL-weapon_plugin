@@ -20,6 +20,8 @@ class WeaponPlugin: JavaPlugin() {
     private var configuration: FileConfiguration? = null
     private var manager = server.pluginManager
 
+    var bullets = ArrayList<Int>()
+
     override fun onEnable() {
         load()
         logger.info("Plugin enabled!")
