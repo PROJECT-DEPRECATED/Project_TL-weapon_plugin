@@ -101,14 +101,14 @@ class PistolListener(private var plugin: WeaponPlugin): Listener {
         }
 
         plugin.bullets.add(bullet.entityId)
-        plugin.weaponConfig().set("weapon.projecttl.pistol", PistolListener(plugin).leftAmmo - 1)
-        player.sendActionBar("${ChatColor.GOLD}Left Bullet: ${ChatColor.GREEN}${PistolListener(plugin).leftAmmo}/${PistolListener(plugin).fixAmmoCount}")
+        plugin.weaponConfig().set("weapon.projecttl.pistol", leftAmmo - 1)
+        player.sendActionBar("${ChatColor.GOLD}Left Bullet: ${ChatColor.GREEN}${leftAmmo}/${fixAmmoCount}")
     }
 
     private fun reload(player: Player) {
         with(player) {
             when {
-                !PistolListener(plugin).reloading -> {
+                !reloading -> {
                     sendActionBar("${ChatColor.GOLD}Reloading...")
                     playSound(
                         this.location,
@@ -119,7 +119,6 @@ class PistolListener(private var plugin: WeaponPlugin): Listener {
 
                     plugin.weaponConfig().set("weapon.projecttl.pistol.reload", true)
 
-                    inventory.itemInOffHand.subtract(1)
                     object : BukkitRunnable() {
                         override fun run() {
                             playSound(
@@ -129,7 +128,7 @@ class PistolListener(private var plugin: WeaponPlugin): Listener {
                                 2.toFloat()
                             )
 
-                            plugin.weaponConfig().set("weapon.projecttl.pistol", fixAmmoCount)
+                            plugin.weaponConfig().set("weapon.projecttl.pistol", 12)
                             plugin.weaponConfig().set("weapon.projecttl.pistol.reload", false)
                         }
                     }.runTaskLater(plugin, (1 * 20).toLong())
