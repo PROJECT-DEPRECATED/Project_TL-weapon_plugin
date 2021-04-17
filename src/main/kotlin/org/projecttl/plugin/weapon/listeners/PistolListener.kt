@@ -144,5 +144,4 @@ class PistolListener(private var plugin: WeaponPlugin): Listener {
             }
         }
     }
-    }
 }
