@@ -11,8 +11,8 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.block.Action
 import org.bukkit.event.entity.EntityDamageByEntityEvent
+import org.bukkit.event.entity.ProjectileHitEvent
 import org.bukkit.event.player.PlayerInteractEvent
-import org.bukkit.scheduler.BukkitRunnable
 import org.projecttl.plugin.weapon.WeaponPlugin
 import org.projecttl.plugin.weapon.utils.Pistol
 
@@ -86,9 +86,9 @@ class PistolListener(private var plugin: WeaponPlugin): Listener {
         }
     }
 
-    // When the player is hit by a bullet
+    /*
     @EventHandler
-    fun onEntityDamage(event: EntityDamageByEntityEvent) {
+    fun onEntityDamage(event: ProjectileHitEvent) {
         if (event.damager is Snowball) {
             val projectile = event.damager as Snowball
             val entityId: Int = event.entity.entityId
@@ -102,6 +102,26 @@ class PistolListener(private var plugin: WeaponPlugin): Listener {
 
                     bullet.remove(entityId)
                     event.damage = 5.toDouble()
+                }
+            }
+        }
+    }
+     */
+
+    @EventHandler
+    fun onEntityDamage(event: EntityDamageByEntityEvent) {
+        val damageTarget = event.damager
+
+        if (damageTarget is Snowball) {
+            val bullet: Snowball = event.damager as Snowball
+
+            if (bullet.shooter is Player) {
+                val shooter = bullet.shooter as Player
+
+                if (shooter.inventory.itemInMainHand.type == Pistol.itemStack().type && shooter.inventory.itemInMainHand.itemMeta.displayName == Pistol.getItemName()) {
+                    if (shooter.inventory.itemInMainHand.itemMeta.customModelData == Pistol.getCustomModelData()) {
+                        event.damage = 5.0
+                    }
                 }
             }
         }
