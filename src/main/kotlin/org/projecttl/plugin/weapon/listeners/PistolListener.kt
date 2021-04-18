@@ -90,7 +90,7 @@ class PistolListener(private var plugin: WeaponPlugin): Listener {
     @EventHandler
     fun onEntityDamage(event: EntityDamageByEntityEvent) {
         if (event.damager is Snowball) {
-            val projectile = event.damager as Projectile
+            val projectile = event.damager as Snowball
             val entityId: Int = event.entity.entityId
 
             val bullet = plugin.bullets
@@ -98,12 +98,7 @@ class PistolListener(private var plugin: WeaponPlugin): Listener {
             if (projectile.shooter is Player) {
                 if (bullet.contains(entityId)) {
                     bullet.remove(entityId)
-
-                    if (event.damager is Player) {
-                        event.damage = 5.toDouble()
-                    } else {
-                        event.damage = 5.toDouble()
-                    }
+                    event.damage = 5.toDouble()
 
                     bullet.remove(entityId)
                     event.damage = 5.toDouble()
