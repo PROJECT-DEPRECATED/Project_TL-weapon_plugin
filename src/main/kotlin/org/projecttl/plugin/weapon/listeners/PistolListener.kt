@@ -98,6 +98,14 @@ class PistolListener(private var plugin: WeaponPlugin): Listener {
             if (projectile.shooter is Player) {
                 if (bullet.contains(entityId)) {
                     bullet.remove(entityId)
+
+                    if (event.damager is Player) {
+                        event.damage = 5.toDouble()
+                    } else {
+                        event.damage = 5.toDouble()
+                    }
+
+                    bullet.remove(entityId)
                     event.damage = 5.toDouble()
                 }
             }
