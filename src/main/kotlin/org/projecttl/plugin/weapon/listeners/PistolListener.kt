@@ -1,5 +1,6 @@
 package org.projecttl.plugin.weapon.listeners
 
+import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.Effect
 import org.bukkit.Sound
@@ -137,19 +138,17 @@ class PistolListener(private var plugin: WeaponPlugin): Listener {
 
                 plugin.weaponConfig().set("weapon.projecttl.pistol.reload", true)
 
-                object : BukkitRunnable() {
-                    override fun run() {
-                        player.playSound(
-                            player.location,
-                            Sound.BLOCK_IRON_DOOR_CLOSE,
-                            100.toFloat(),
-                            2.toFloat()
-                        )
+                Bukkit.getScheduler().runTaskLater(plugin, Runnable {
+                    player.playSound(
+                        player.location,
+                        Sound.BLOCK_IRON_DOOR_CLOSE,
+                        100.toFloat(),
+                        2.toFloat()
+                    )
 
-                        plugin.weaponConfig().set("weapon.projecttl.pistol.leftAmmo", 12)
-                        plugin.weaponConfig().set("weapon.projecttl.pistol.reload", false)
-                    }
-                }.runTaskLater(plugin, (1.5 * 20).toLong())
+                    plugin.weaponConfig().set("weapon.projecttl.pistol.leftAmmo", 12)
+                    plugin.weaponConfig().set("weapon.projecttl.pistol.reload", false)
+                }, (1.5 * 20).toLong())
             }
 
             else -> {

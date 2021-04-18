@@ -1,5 +1,6 @@
 package org.projecttl.plugin.weapon.utils
 
+import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.Sound
 import org.bukkit.entity.Player
@@ -35,12 +36,11 @@ class Skills(private val plugin: WeaponPlugin) {
                 )
             )
 
-            object : BukkitRunnable() {
-                override fun run() {
-                    plugin.weaponConfig().set("weapon.cooldown", false)
-                    player.sendMessage("<Skill_Manager> ${ChatColor.GOLD}You're cooldown is end!")
-                }
-            }.runTaskLater(plugin, (cooldownTime * 20).toLong())
+            Bukkit.getScheduler().runTaskLater(plugin, Runnable {
+                plugin.weaponConfig().set("weapon.cooldown", false)
+                player.sendMessage("<Skill_Manager> ${ChatColor.GOLD}You're cooldown is end!")
+            }, (cooldownTime * 20).toLong())
+
 
         } else {
             player.sendMessage("<Skill_Manager> ${ChatColor.GOLD}You can use the skill $cooldownTime seconds from the time you use it.")
