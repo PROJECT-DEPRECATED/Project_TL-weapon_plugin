@@ -7,7 +7,6 @@ import org.projecttl.plugin.weapon.commands.SpawnWeapon
 import org.projecttl.plugin.weapon.commands.arguments.ArgumentSpawnWeapon
 import org.projecttl.plugin.weapon.listeners.KnifeListener
 import org.projecttl.plugin.weapon.listeners.PistolListener
-import org.projecttl.plugin.weapon.utils.Skills
 import java.io.File
 
 class WeaponPlugin: JavaPlugin() {
@@ -19,8 +18,6 @@ class WeaponPlugin: JavaPlugin() {
     private var getFile: File? = null
     private var configuration: FileConfiguration? = null
     private var manager = server.pluginManager
-
-    var bullets = ArrayList<Int>()
 
     override fun onEnable() {
         load()
@@ -40,11 +37,22 @@ class WeaponPlugin: JavaPlugin() {
         logger.info("Plugin disabled!")
     }
 
+    private fun setDefault() {
+        weaponConfig().set("weapon.cooldown", false)
+        weaponConfig().set("weapon.projecttl.pistol.reload", false)
+        weaponConfig().set("weapon.projecttl.pistol.leftAmmo", 12)
+
+        weaponConfig().set("weapon.cooltime", 60)
+        weaponConfig().set("weapon.duration", 15)
+
+        println("System load complete!") // DEBUG_CODE
+    }
+
     private fun load() {
         getFile = File(dataFolder, "config.yml").also {
             if (!it.exists()) {
                 configuration?.save(it)
-                configuration?.set("weapon.cooldown", false)
+                setDefault()
             }
 
             configuration?.load(it)

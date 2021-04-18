@@ -11,7 +11,6 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.block.Action
 import org.bukkit.event.entity.EntityDamageByEntityEvent
-import org.bukkit.event.entity.ProjectileHitEvent
 import org.bukkit.event.player.PlayerInteractEvent
 import org.projecttl.plugin.weapon.WeaponPlugin
 import org.projecttl.plugin.weapon.utils.Pistol
@@ -51,12 +50,11 @@ class PistolListener(private var plugin: WeaponPlugin): Listener {
             Action.RIGHT_CLICK_AIR -> {
                 if (player.name == WeaponPlugin.target && playerMainHand.type == Pistol.itemStack().type) {
                     if (playerMainHand.itemMeta.displayName == Pistol.getItemName() && playerMainHand.itemMeta.customModelData == Pistol.getCustomModelData()) {
-                        when {
-                            leftAmmo > 0 -> {
+                        when (leftAmmo) {
+                            fixAmmoCount -> {
                                 player.sendActionBar("${ChatColor.GOLD}Left Bullet: ${ChatColor.GREEN}$leftAmmo/$fixAmmoCount")
                                 player.playSound(player.location, Sound.BLOCK_IRON_DOOR_CLOSE, 100.toFloat(), 2.toFloat())
                             }
-
                             else -> {
                                 reload(player)
                             }
@@ -68,12 +66,21 @@ class PistolListener(private var plugin: WeaponPlugin): Listener {
             Action.RIGHT_CLICK_BLOCK -> {
                 if (player.name == WeaponPlugin.target && playerMainHand.type == Pistol.itemStack().type) {
                     if (playerMainHand.itemMeta.displayName == Pistol.getItemName() && playerMainHand.itemMeta.customModelData == Pistol.getCustomModelData()) {
-                        if (leftAmmo > 0) {
-                            player.sendActionBar("${ChatColor.GOLD}Left Bullet: ${ChatColor.GREEN}$leftAmmo/$fixAmmoCount")
-                            player.playSound(player.location, Sound.BLOCK_IRON_DOOR_CLOSE, 100.toFloat(), 2.toFloat())
-                        } else if (leftAmmo <= 0) {
-                            player.sendActionBar("${ChatColor.GOLD}Left Bullet: ${ChatColor.RED}$leftAmmo/$fixAmmoCount")
-                            player.playSound(player.location, Sound.BLOCK_IRON_DOOR_CLOSE, 100.toFloat(), 2.toFloat())
+                        when {
+                            leftAmmo == fixAmmoCount -> {
+                                player.sendActionBar("${ChatColor.GOLD}Left Bullet: ${ChatColor.GREEN}$leftAmmo/$fixAmmoCount")
+                                player.playSound(player.location, Sound.BLOCK_IRON_DOOR_CLOSE, 100.toFloat(), 2.toFloat())
+                            }
+
+                            leftAmmo <= 1 -> {
+                                player.sendActionBar("${ChatColor.GOLD}Left Bullet: ${ChatColor.GOLD}$leftAmmo/$fixAmmoCount")
+                                player.playSound(player.location, Sound.BLOCK_IRON_DOOR_CLOSE, 100.toFloat(), 2.toFloat())
+                            }
+
+                            else -> {
+                                player.sendActionBar("${ChatColor.GOLD}Left Bullet: ${ChatColor.RED}$leftAmmo/$fixAmmoCount")
+                                player.playSound(player.location, Sound.BLOCK_IRON_DOOR_CLOSE, 100.toFloat(), 2.toFloat())
+                            }
                         }
                     }
 
@@ -85,28 +92,6 @@ class PistolListener(private var plugin: WeaponPlugin): Listener {
             }
         }
     }
-
-    /*
-    @EventHandler
-    fun onEntityDamage(event: ProjectileHitEvent) {
-        if (event.damager is Snowball) {
-            val projectile = event.damager as Snowball
-            val entityId: Int = event.entity.entityId
-
-            val bullet = plugin.bullets
-
-            if (projectile.shooter is Player) {
-                if (bullet.contains(entityId)) {
-                    bullet.remove(entityId)
-                    event.damage = 5.toDouble()
-
-                    bullet.remove(entityId)
-                    event.damage = 5.toDouble()
-                }
-            }
-        }
-    }
-     */
 
     @EventHandler
     fun onEntityDamage(event: EntityDamageByEntityEvent) {
@@ -133,17 +118,14 @@ class PistolListener(private var plugin: WeaponPlugin): Listener {
             bullet
         }
 
-        with(bullet) {
-            world.playEffect(bullet.location, Effect.SMOKE, 10)
-            world.playSound(
-                player.location,
-                Sound.ENTITY_FIREWORK_ROCKET_LARGE_BLAST,
-                100.toFloat(),
-                1.toFloat()
-            )
-        }
+        bullet.world.playEffect(bullet.location, Effect.SMOKE, 10)
+        bullet.world.playSound(
+            player.location,
+            Sound.ENTITY_FIREWORK_ROCKET_LARGE_BLAST,
+            100.toFloat(),
+            1.toFloat()
+        )
 
-        plugin.bullets.add(bullet.entityId)
         plugin.weaponConfig().set("weapon.projecttl.pistol.leftAmmo", leftAmmo - 1)
         player.sendActionBar("${ChatColor.GOLD}Left Bullet: ${ChatColor.GREEN}${leftAmmo}/${fixAmmoCount}")
     }
