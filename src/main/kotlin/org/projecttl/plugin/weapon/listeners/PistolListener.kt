@@ -115,7 +115,7 @@ class PistolListener(private var plugin: WeaponPlugin): Listener {
         }
 
         plugin.bullets.add(bullet.entityId)
-        plugin.weaponConfig().set("weapon.projecttl.pistol", leftAmmo - 1)
+        plugin.weaponConfig().set("weapon.projecttl.pistol.leftAmmo", leftAmmo - 1)
         player.sendActionBar("${ChatColor.GOLD}Left Bullet: ${ChatColor.GREEN}${leftAmmo}/${fixAmmoCount}")
     }
 
