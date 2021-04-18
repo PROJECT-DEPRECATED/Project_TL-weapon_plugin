@@ -29,36 +29,50 @@ class PistolListener(private var plugin: WeaponPlugin): Listener {
 
         val playerMainHand = player.inventory.itemInMainHand
 
-        if (action == Action.LEFT_CLICK_AIR || action == Action.LEFT_CLICK_BLOCK) {
-            if (player.name == WeaponPlugin.target && playerMainHand.type == Pistol.itemStack().type) {
-                if (playerMainHand.itemMeta.displayName == Pistol.getItemName() && playerMainHand.itemMeta.customModelData == Pistol.getCustomModelData()) {
-                    when {
-                        leftAmmo > 0 -> {
-                            shoot(player)
-                        }
+        when (action) {
+            Action.LEFT_CLICK_AIR, Action.LEFT_CLICK_BLOCK -> {
+                if (player.name == WeaponPlugin.target && playerMainHand.type == Pistol.itemStack().type) {
+                    if (playerMainHand.itemMeta.displayName == Pistol.getItemName() && playerMainHand.itemMeta.customModelData == Pistol.getCustomModelData()) {
+                        when {
+                            leftAmmo > 0 -> {
+                                shoot(player)
+                            }
 
-                        else -> {
-                            with(player) {
-                                playSound(this.location, Sound.BLOCK_IRON_DOOR_CLOSE, 100.toFloat(), 2.toFloat())
-                                sendActionBar("${ChatColor.GOLD}Left Bullet: ${ChatColor.RED}$leftAmmo${ChatColor.GREEN}/$fixAmmoCount")
+                            else -> {
+                                player.playSound(player.location, Sound.BLOCK_IRON_DOOR_CLOSE, 100.toFloat(), 2.toFloat())
+                                player.sendActionBar("${ChatColor.GOLD}Left Bullet: ${ChatColor.RED}$leftAmmo${ChatColor.GREEN}/$fixAmmoCount")
                             }
                         }
                     }
                 }
             }
-        } else if (action == Action.RIGHT_CLICK_AIR || action == Action.RIGHT_CLICK_BLOCK) {
-            if (player.name == WeaponPlugin.target && playerMainHand.type == Pistol.itemStack().type) {
-                if (playerMainHand.itemMeta.displayName == Pistol.getItemName() && playerMainHand.itemMeta.customModelData == Pistol.getCustomModelData()) {
-                    when {
-                        leftAmmo > 0 -> {
-                            with(player) {
-                                sendActionBar("${ChatColor.GOLD}Left Bullet: ${ChatColor.GREEN}$leftAmmo/4")
-                                playSound(player.location, Sound.BLOCK_IRON_DOOR_CLOSE, 100.toFloat(), 2.toFloat())
+
+            Action.RIGHT_CLICK_AIR -> {
+                if (player.name == WeaponPlugin.target && playerMainHand.type == Pistol.itemStack().type) {
+                    if (playerMainHand.itemMeta.displayName == Pistol.getItemName() && playerMainHand.itemMeta.customModelData == Pistol.getCustomModelData()) {
+                        when {
+                            leftAmmo > 0 -> {
+                                player.sendActionBar("${ChatColor.GOLD}Left Bullet: ${ChatColor.GREEN}$leftAmmo/$fixAmmoCount")
+                                player.playSound(player.location, Sound.BLOCK_IRON_DOOR_CLOSE, 100.toFloat(), 2.toFloat())
+                            }
+
+                            else -> {
+                                reload(player)
                             }
                         }
+                    }
+                }
+            }
 
-                        else -> {
-                            reload(player)
+            Action.RIGHT_CLICK_BLOCK -> {
+                if (player.name == WeaponPlugin.target && playerMainHand.type == Pistol.itemStack().type) {
+                    if (playerMainHand.itemMeta.displayName == Pistol.getItemName() && playerMainHand.itemMeta.customModelData == Pistol.getCustomModelData()) {
+                        if (leftAmmo > 0) {
+                            player.sendActionBar("${ChatColor.GOLD}Left Bullet: ${ChatColor.GREEN}$leftAmmo/$fixAmmoCount")
+                            player.playSound(player.location, Sound.BLOCK_IRON_DOOR_CLOSE, 100.toFloat(), 2.toFloat())
+                        } else if (leftAmmo <= 0) {
+                            player.sendActionBar("${ChatColor.GOLD}Left Bullet: ${ChatColor.RED}$leftAmmo/$fixAmmoCount")
+                            player.playSound(player.location, Sound.BLOCK_IRON_DOOR_CLOSE, 100.toFloat(), 2.toFloat())
                         }
                     }
                 }
