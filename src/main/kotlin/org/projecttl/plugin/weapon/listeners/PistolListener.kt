@@ -19,7 +19,7 @@ import org.projecttl.plugin.weapon.utils.Pistol
 class PistolListener(private var plugin: WeaponPlugin): Listener {
 
     private val reloading = plugin.weaponConfig().getBoolean("weapon.projecttl.pistol.reload")
-    private val leftAmmo = plugin.weaponConfig().getInt("weapon.projecttl.pistol")
+    private val leftAmmo = plugin.weaponConfig().getInt("weapon.projecttl.pistol.leftAmmo")
     private val fixAmmoCount = 12
 
     @EventHandler
@@ -127,10 +127,10 @@ class PistolListener(private var plugin: WeaponPlugin): Listener {
                             2.toFloat()
                         )
 
-                        plugin.weaponConfig().set("weapon.projecttl.pistol", 12)
+                        plugin.weaponConfig().set("weapon.projecttl.pistol.leftAmmo", 12)
                         plugin.weaponConfig().set("weapon.projecttl.pistol.reload", false)
                     }
-                }.runTaskLater(plugin, (1 * 20).toLong())
+                }.runTaskLater(plugin, (1.5 * 20).toLong())
             }
 
             else -> {
