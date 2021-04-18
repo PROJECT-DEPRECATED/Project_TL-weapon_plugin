@@ -75,7 +75,12 @@ class PistolListener(private var plugin: WeaponPlugin): Listener {
                             player.playSound(player.location, Sound.BLOCK_IRON_DOOR_CLOSE, 100.toFloat(), 2.toFloat())
                         }
                     }
+
+                    event.isCancelled = true
                 }
+            }
+            else -> {
+                // void
             }
         }
     }
@@ -92,7 +97,7 @@ class PistolListener(private var plugin: WeaponPlugin): Listener {
             if (projectile.shooter is Player) {
                 if (bullet.contains(entityId)) {
                     bullet.remove(entityId)
-                    event.damage = event.damage + 5
+                    event.damage = 5.toDouble()
                 }
             }
         }
