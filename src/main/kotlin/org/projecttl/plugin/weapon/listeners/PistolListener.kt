@@ -36,6 +36,7 @@ class PistolListener(private val plugin: WeaponPlugin): Listener {
         when (event.action) {
             Action.LEFT_CLICK_AIR, Action.LEFT_CLICK_BLOCK -> {
                 if (leftAmmo != 0) {
+                    player.sendMessage("DEBUG: ${ChatColor.LIGHT_PURPLE}$shooting")
                     if (!shooting) {
                         plugin.weaponConfig().set(shootingPath, true)
                         val bullet: Projectile = player.launchProjectile<Projectile>(Snowball::class.java).let { bullet ->
@@ -52,6 +53,8 @@ class PistolListener(private val plugin: WeaponPlugin): Listener {
                             1.toFloat()
                         )
 
+                        player.sendMessage("DEBUG: ${ChatColor.LIGHT_PURPLE}$shooting")
+
                         plugin.weaponConfig().set(leftAmmoPath, leftAmmo - 1)
                         player.sendActionBar("${ChatColor.GOLD}Left Bullet: ${ChatColor.GREEN}${leftAmmo}/${fixAmmoCount}")
 
@@ -64,6 +67,7 @@ class PistolListener(private val plugin: WeaponPlugin): Listener {
             }
 
             Action.RIGHT_CLICK_AIR -> {
+                player.sendMessage("DEBUG: ${ChatColor.LIGHT_PURPLE}TRUE")
                 plugin.weaponConfig().set(leftAmmoPath, fixAmmoCount)
             }
         }
