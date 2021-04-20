@@ -7,7 +7,7 @@ import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import org.projecttl.plugin.weapon.WeaponPlugin
 import org.projecttl.plugin.weapon.utils.Pistol
-import org.projecttl.plugin.weapon.utils.Sword
+import org.projecttl.plugin.weapon.utils.Knife
 
 class SpawnWeapon(private val plugin: WeaponPlugin): CommandExecutor {
 
@@ -24,12 +24,14 @@ class SpawnWeapon(private val plugin: WeaponPlugin): CommandExecutor {
                     args.size == 1 -> {
                         when (args[0]) {
                             "pistol" -> {
-                                Pistol.giveItem(sender)
+                                val pistol = Pistol(plugin)
+                                pistol.giveItem(sender)
+
                                 return true
                             }
 
                             "knife" -> {
-                                Sword.giveItem(sender)
+                                Knife.giveItem(sender)
                                 return true
                             }
                         }

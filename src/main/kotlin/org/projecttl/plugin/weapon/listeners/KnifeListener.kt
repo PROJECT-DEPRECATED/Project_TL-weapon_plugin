@@ -6,7 +6,7 @@ import org.bukkit.event.block.Action
 import org.bukkit.event.player.PlayerInteractEvent
 import org.projecttl.plugin.weapon.WeaponPlugin
 import org.projecttl.plugin.weapon.utils.Skills
-import org.projecttl.plugin.weapon.utils.Sword
+import org.projecttl.plugin.weapon.utils.Knife
 
 class KnifeListener(private val plugin: WeaponPlugin): Listener {
 
@@ -19,8 +19,8 @@ class KnifeListener(private val plugin: WeaponPlugin): Listener {
         val skills = Skills(plugin)
 
         if (action == Action.RIGHT_CLICK_AIR || action == Action.RIGHT_CLICK_BLOCK) {
-            if (player.name == WeaponPlugin.target && mainHand.type == Sword.itemStack().type) {
-                if (mainHand.itemMeta.displayName == Sword.itemName() && mainHand.itemMeta.customModelData == Sword.customModelData()) {
+            if (player.name == WeaponPlugin.target && mainHand.type == Knife.itemStack().type) {
+                if (mainHand.itemMeta.localizedName == Knife.itemName() && mainHand.itemMeta.customModelData == Knife.customModelData()) {
                     skills.powerBooster(player)
                 }
             }

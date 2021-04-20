@@ -1,5 +1,6 @@
 package org.projecttl.plugin.weapon.listeners
 
+import net.kyori.adventure.text.Component
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.Effect
@@ -18,57 +19,53 @@ import org.projecttl.plugin.weapon.utils.Pistol
 
 class PistolListener(private val plugin: WeaponPlugin): Listener {
 
-    private val shootingPath = "weapon.projecttl.pistol.shooting"
-    private val shooting = plugin.weaponConfig().getBoolean(shootingPath)
-
-    private val reloadingPath = "weapon.projecttl.pistol.reload"
-    private val reloading = plugin.weaponConfig().getBoolean(reloadingPath)
-
-    private val leftAmmoPath = "weapon.projecttl.pistol.leftAmmo"
-    private val leftAmmo = plugin.weaponConfig().getInt(leftAmmoPath)
-
     private val fixAmmoCount = 12
 
     @EventHandler
     fun onEvent(event: PlayerInteractEvent) {
         val player = event.player
+        val pistol = Pistol(plugin)
 
-        when (event.action) {
-            Action.LEFT_CLICK_AIR, Action.LEFT_CLICK_BLOCK -> {
-                if (leftAmmo != 0) {
-                    player.sendMessage("DEBUG: ${ChatColor.LIGHT_PURPLE}$shooting")
-                    if (!shooting) {
-                        plugin.weaponConfig().set(shootingPath, true)
-                        val bullet: Projectile = player.launchProjectile<Projectile>(Snowball::class.java).let { bullet ->
-                                bullet.velocity = player.location.direction.multiply(5)
+        if (player.inventory.itemInMainHand.type == pistol.itemStack().type && player.inventory.itemInMainHand.itemMeta.localizedName == pistol.getItemName()) {
+            if (player.inventory.itemInMainHand.itemMeta.customModelData == pistol.getCustomModelData()) {
+                when (event.action) {
+                    Action.LEFT_CLICK_AIR, Action.LEFT_CLICK_BLOCK -> {
+                        if (pistol.getAmmo() != 0) {
+                            if (!pistol.getShoot()) {
+                                pistol.setReload(true)
+                                val bullet: Projectile = player.launchProjectile<Projectile>(Snowball::class.java).let { bullet ->
+                                    bullet.velocity = player.location.direction.multiply(5)
 
-                                bullet
+                                    bullet
+                                }
+
+                                bullet.world.playEffect(player.location, Effect.SMOKE, 10)
+                                bullet.world.playSound(
+                                    bullet.location,
+                                    Sound.ENTITY_FIREWORK_ROCKET_BLAST,
+                                    100.toFloat(),
+                                    1.toFloat()
+                                )
+
+                                pistol.setAmmo(pistol.getAmmo() - 1)
+                                player.sendActionBar(Component.text("${ChatColor.GOLD}Left Bullet: ${ChatColor.GREEN}${pistol.getAmmo()}/${fixAmmoCount}"))
+
+                                Bukkit.getScheduler().runTaskLater(plugin, Runnable {
+                                    pistol.setReload(false)
+                                }, (0.7 * 20).toLong())
                             }
 
-                        bullet.world.playEffect(player.location, Effect.SMOKE, 10)
-                        bullet.world.playSound(
-                            bullet.location,
-                            Sound.ENTITY_FIREWORK_ROCKET_BLAST,
-                            100.toFloat(),
-                            1.toFloat()
-                        )
-
-                        player.sendMessage("DEBUG: ${ChatColor.LIGHT_PURPLE}$shooting")
-
-                        plugin.weaponConfig().set(leftAmmoPath, leftAmmo - 1)
-                        player.sendActionBar("${ChatColor.GOLD}Left Bullet: ${ChatColor.GREEN}${leftAmmo}/${fixAmmoCount}")
-
-                        Bukkit.getScheduler().runTaskLater(plugin, Runnable {
-                            plugin.weaponConfig().set(shootingPath, false)
-                        }, (0.7 * 20).toLong())
+                        }
                     }
 
-                }
-            }
+                    Action.RIGHT_CLICK_AIR -> {
+                        pistol.setAmmo(fixAmmoCount)
+                    }
 
-            Action.RIGHT_CLICK_AIR -> {
-                player.sendMessage("DEBUG: ${ChatColor.LIGHT_PURPLE}TRUE")
-                plugin.weaponConfig().set(leftAmmoPath, fixAmmoCount)
+                    else -> {
+                        // void code
+                    }
+                }
             }
         }
     }
@@ -76,6 +73,7 @@ class PistolListener(private val plugin: WeaponPlugin): Listener {
     @EventHandler
     fun onEntityDamage(event: EntityDamageByEntityEvent) {
         val damageTarget = event.damager
+        val pistol = Pistol(plugin)
 
         if (damageTarget is Snowball) {
             val bullet: Snowball = event.damager as Snowball
@@ -83,8 +81,8 @@ class PistolListener(private val plugin: WeaponPlugin): Listener {
             if (bullet.shooter is Player) {
                 val shooter = bullet.shooter as Player
 
-                if (shooter.inventory.itemInMainHand.type == Pistol.itemStack().type && shooter.inventory.itemInMainHand.itemMeta.displayName == Pistol.getItemName()) {
-                    if (shooter.inventory.itemInMainHand.itemMeta.customModelData == Pistol.getCustomModelData()) {
+                if (shooter.inventory.itemInMainHand.type == pistol.itemStack().type && shooter.inventory.itemInMainHand.itemMeta.localizedName == pistol.getItemName()) {
+                    if (shooter.inventory.itemInMainHand.itemMeta.customModelData == pistol.getCustomModelData()) {
                         event.damage = 5.0
                     }
                 }
