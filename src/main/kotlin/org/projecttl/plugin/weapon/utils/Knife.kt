@@ -5,8 +5,9 @@ import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
+import org.projecttl.plugin.weapon.WeaponPlugin
 
-class Knife {
+class Knife(private val plugin: WeaponPlugin) {
     companion object {
         private val itemType: ItemStack = ItemStack(Material.DIAMOND_SWORD)
         private val itemName = "${ChatColor.YELLOW}Project_TL's Knife"
@@ -41,6 +42,11 @@ class Knife {
 
         fun customModelData(): Int {
             return customModelData
+        }
+
+        fun getSkils() {
+            val skill = Skills(plugin)
+            skill.powerBooster
         }
     }
 }
