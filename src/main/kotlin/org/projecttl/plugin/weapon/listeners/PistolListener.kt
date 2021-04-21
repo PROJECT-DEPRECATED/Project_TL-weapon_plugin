@@ -55,11 +55,32 @@ class PistolListener(private val plugin: WeaponPlugin): Listener {
                                 }, (0.7 * 20).toLong())
                             }
 
+                        } else {
+                            player.sendActionBar(Component.text("${ChatColor.GOLD}Left Bullet: ${ChatColor.RED}${pistol.getAmmo()}/${fixAmmoCount}"))
+                            player.playSound(player.location, Sound.BLOCK_IRON_DOOR_CLOSE, 100.toFloat(), 2.toFloat())
                         }
                     }
 
                     Action.RIGHT_CLICK_AIR -> {
-                        pistol.setAmmo(fixAmmoCount)
+                        player.sendActionBar(Component.text("${ChatColor.GOLD}RELOADING..."))
+                        player.playSound(
+                            player.location,
+                            Sound.BLOCK_IRON_DOOR_OPEN,
+                            100.toFloat(),
+                            2.toFloat()
+                        )
+
+                        Bukkit.getScheduler().runTaskLater(plugin, Runnable {
+                            pistol.setAmmo(fixAmmoCount)
+                            player.sendActionBar(Component.text("${ChatColor.GREEN}RELOAD COMPLETE!"))
+
+                            player.playSound(
+                                player.location,
+                                Sound.BLOCK_IRON_DOOR_CLOSE,
+                                100.toFloat(),
+                                2.toFloat()
+                            )
+                        }, (1.5 * 20).toLong())
                     }
 
                     else -> {
