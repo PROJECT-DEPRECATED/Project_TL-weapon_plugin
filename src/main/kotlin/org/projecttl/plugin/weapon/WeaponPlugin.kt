@@ -6,7 +6,6 @@ import org.bukkit.plugin.java.JavaPlugin
 import org.projecttl.plugin.weapon.commands.SpawnWeapon
 import org.projecttl.plugin.weapon.commands.arguments.ArgumentSpawnWeapon
 import org.projecttl.plugin.weapon.listeners.KnifeListener
-import org.projecttl.plugin.weapon.listeners.PistolListener
 import java.io.File
 
 class WeaponPlugin: JavaPlugin() {
@@ -28,7 +27,6 @@ class WeaponPlugin: JavaPlugin() {
             it.tabCompleter = ArgumentSpawnWeapon()
         }
 
-        manager.registerEvents(PistolListener(this), this)
         manager.registerEvents(KnifeListener(this), this)
     }
 
@@ -37,22 +35,10 @@ class WeaponPlugin: JavaPlugin() {
         logger.info("Plugin disabled!")
     }
 
-    private fun setDefault() {
-        weaponConfig().set("weapon.cooldown", false)
-        weaponConfig().set("weapon.projecttl.pistol.reload", false)
-        weaponConfig().set("weapon.projecttl.pistol.leftAmmo", 12)
-
-        weaponConfig().set("weapon.cooltime", 60)
-        weaponConfig().set("weapon.duration", 15)
-
-        println("System load complete!") // DEBUG_CODE
-    }
-
     private fun load() {
         getFile = File(dataFolder, "config.yml").also {
             if (!it.exists()) {
                 configuration?.save(it)
-                setDefault()
             }
 
             configuration?.load(it)

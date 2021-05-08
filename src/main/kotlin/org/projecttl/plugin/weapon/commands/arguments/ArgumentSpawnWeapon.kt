@@ -18,10 +18,10 @@ class ArgumentSpawnWeapon: TabCompleter {
             if (command.name == "weapon") {
                 when (args.size) {
                     1 -> {
-                        commandList.add("knife")
-                        commandList.add("pistol")
                         commandList.add("cooldown")
+                        commandList.add("default")
                         commandList.add("duration")
+                        commandList.add("knife")
 
                         return commandList
                     }

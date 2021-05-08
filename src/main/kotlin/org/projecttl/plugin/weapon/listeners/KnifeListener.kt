@@ -1,5 +1,6 @@
 package org.projecttl.plugin.weapon.listeners
 
+import net.kyori.adventure.text.Component
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.block.Action
@@ -19,9 +20,15 @@ class KnifeListener(private val plugin: WeaponPlugin): Listener {
         val skills = Skills(plugin)
 
         if (action == Action.RIGHT_CLICK_AIR || action == Action.RIGHT_CLICK_BLOCK) {
-            if (player.name == WeaponPlugin.target && mainHand.type == Knife.itemStack().type) {
-                if (mainHand.itemMeta.localizedName == Knife.itemName() && mainHand.itemMeta.customModelData == Knife.customModelData()) {
-                    skills.powerBooster(player)
+            if (mainHand.type == Knife(plugin).itemStack().type && mainHand.itemMeta.lore() == Knife(plugin).itemLore()) {
+                if (mainHand.itemMeta.displayName() == Component.text(Knife(plugin).itemName()) && mainHand.itemMeta.customModelData == Knife(plugin).customModelData()) {
+                    if (!player.isOp) {
+                        if (player.name == WeaponPlugin.target) {
+                            skills.powerBooster(player)
+                        }
+                    } else {
+                        skills.findPlayer(player, 20)
+                    }
                 }
             }
         }

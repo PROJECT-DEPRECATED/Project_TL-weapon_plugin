@@ -6,7 +6,6 @@ import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import org.projecttl.plugin.weapon.WeaponPlugin
-import org.projecttl.plugin.weapon.utils.Pistol
 import org.projecttl.plugin.weapon.utils.Knife
 
 class SpawnWeapon(private val plugin: WeaponPlugin): CommandExecutor {
@@ -15,24 +14,20 @@ class SpawnWeapon(private val plugin: WeaponPlugin): CommandExecutor {
         if (sender !is Player) {
             return false
         } else {
-            if (command.name == "weapon" && sender.name == WeaponPlugin.target && sender.isOp) {
+            if (command.name == "weapon" && sender.name == WeaponPlugin.target) {
                 when {
                     args.isNullOrEmpty() -> {
                         return false
                     }
 
+
                     args.size == 1 -> {
-                        when (args[0]) {
-                            "pistol" -> {
-                                val pistol = Pistol(plugin)
-                                pistol.giveItem(sender)
-
-                                return true
-                            }
-
-                            "knife" -> {
-                                Knife.giveItem(sender)
-                                return true
+                        if (sender.isOp) {
+                            when (args[0]) {
+                                "knife" -> {
+                                    Knife(plugin).giveItem(sender)
+                                    return true
+                                }
                             }
                         }
                     }
@@ -40,19 +35,33 @@ class SpawnWeapon(private val plugin: WeaponPlugin): CommandExecutor {
                     args.size == 2 -> {
                         when (args[0]) {
                             "cooldown" -> {
-                                val time: Int = Integer.parseInt(args[1])
-                                plugin.weaponConfig().set("weapon.cooltime", time)
+                                if (sender.isOp) {
+                                    val time: Int = Integer.parseInt(args[1])
+                                    plugin.weaponConfig().set("weapon.cooltime", time)
 
-                                sender.sendMessage("<Skill_Manager> ${ChatColor.GREEN}Your cooldown time is $time seconds")
+                                    sender.sendMessage("<Skill_Manager> ${ChatColor.GREEN}Your cooldown time is $time seconds")
 
-                                return true
+                                    return true
+                                }
                             }
 
                             "duration" -> {
-                                val time: Int = Integer.parseInt(args[1])
-                                plugin.weaponConfig().set("weapon.duration", time)
+                                if (sender.isOp) {
+                                    val time: Int = Integer.parseInt(args[1])
+                                    plugin.weaponConfig().set("weapon.duration", time)
 
-                                sender.sendMessage("<Skill_Manager> ${ChatColor.GREEN}Your effect duration time is $time seconds")
+                                    sender.sendMessage("<Skill_Manager> ${ChatColor.GREEN}Your effect duration time is $time seconds")
+
+                                    return true
+                                }
+                            }
+
+                            "default" -> {
+                                plugin.weaponConfig().set("weapon.cooltime", 60)
+                                plugin.weaponConfig().set("weapon.duration", 20)
+
+                                sender.sendMessage("<Skill_Manager> ${ChatColor.GREEN}Your cooldown time is 60 seconds")
+                                sender.sendMessage("<Skill_Manager> ${ChatColor.GREEN}Your effect duration time is 20 seconds")
 
                                 return true
                             }
