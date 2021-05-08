@@ -50,64 +50,79 @@ class Skills(private val plugin: WeaponPlugin) {
     }
 
     fun findPlayer(player: Player, duration: Int) {
-        var playerCount = 0
-        player.sendMessage("${ChatColor.GOLD}Scanner Result${ChatColor.RESET}:")
-        player.sendMessage("============================================")
+        val enabled = plugin.weaponConfig().getBoolean("weapon.${player.name}.enabled")
 
-        val coordinate = DecimalFormat("#.#")
+        if (!enabled) {
+            plugin.weaponConfig().set("weapon.${player.name}.enabled", true)
 
-        for (target in plugin.server.onlinePlayers) {
-            val getPlayer = Bukkit.getPlayer(target.uniqueId)
+            var playerCount = 0
+            player.sendMessage("${ChatColor.GOLD}Scanner Result${ChatColor.RESET}:")
+            player.sendMessage("============================================")
 
-            val world = getPlayer?.world
-            val x = coordinate.format(getPlayer?.location?.x)
-            val y = coordinate.format(getPlayer?.location?.y)
-            val z = coordinate.format(getPlayer?.location?.z)
+            val coordinate = DecimalFormat("#.#")
 
-            if (getPlayer?.uniqueId != player.uniqueId) {
-                if (world != player.world) {
-                    player.sendMessage("[${ChatColor.RED}INVALID${ChatColor.RESET}] ${ChatColor.YELLOW}${getPlayer?.name} ${ChatColor.RED}is not found this world!")
-                    player.sendMessage("============================================")
-                    playerCount--
-                } else {
-                    player.sendMessage(
-                        "[${ChatColor.GREEN}DETECTED${ChatColor.RESET}] ${ChatColor.YELLOW}${getPlayer.name} ${ChatColor.GREEN}is detected.")
-                    player.sendMessage(
-                        "[${ChatColor.GREEN}X: ${ChatColor.LIGHT_PURPLE}$x${ChatColor.GREEN}," +
-                                " ${ChatColor.GREEN}Y: ${ChatColor.LIGHT_PURPLE}$y${ChatColor.GREEN}," +
-                                " ${ChatColor.GREEN}Z: ${ChatColor.LIGHT_PURPLE}$z${ChatColor.RESET}]"
-                    )
-                    player.sendMessage("============================================")
-                }
+            for (target in plugin.server.onlinePlayers) {
+                val getPlayer = Bukkit.getPlayer(target.uniqueId)
 
-                getPlayer?.sendActionBar(Component.text("[${ChatColor.RED}CAUTION${ChatColor.RESET}] ${ChatColor.GOLD}You have been detected by the scanner."))
-                getPlayer?.addPotionEffects(
-                    mutableListOf(
-                        PotionEffect(
-                            PotionEffectType.GLOWING,
-                            duration * 20,
-                            20,
-                            true
+                val world = getPlayer?.world
+                val x = coordinate.format(getPlayer?.location?.x)
+                val y = coordinate.format(getPlayer?.location?.y)
+                val z = coordinate.format(getPlayer?.location?.z)
+
+                if (getPlayer?.uniqueId != player.uniqueId) {
+                    if (world != player.world) {
+                        player.sendMessage("[${ChatColor.RED}INVALID${ChatColor.RESET}] ${ChatColor.YELLOW}${getPlayer?.name} ${ChatColor.RED}is not found this world!")
+                        player.sendMessage("============================================")
+                        playerCount--
+                    } else {
+                        player.sendMessage(
+                            "[${ChatColor.GREEN}DETECTED${ChatColor.RESET}] ${ChatColor.YELLOW}${getPlayer.name} ${ChatColor.GREEN}is detected."
+                        )
+                        player.sendMessage(
+                            "[${ChatColor.GREEN}X: ${ChatColor.LIGHT_PURPLE}$x${ChatColor.GREEN}," +
+                                    " ${ChatColor.GREEN}Y: ${ChatColor.LIGHT_PURPLE}$y${ChatColor.GREEN}," +
+                                    " ${ChatColor.GREEN}Z: ${ChatColor.LIGHT_PURPLE}$z${ChatColor.RESET}]"
+                        )
+                        player.sendMessage("============================================")
+
+                        getPlayer.playSound(getPlayer.location, Sound.BLOCK_CONDUIT_ACTIVATE, 100F, 2F)
+                    }
+
+                    getPlayer?.sendActionBar(Component.text("[${ChatColor.RED}CAUTION${ChatColor.RESET}] ${ChatColor.GOLD}You have been detected by the scanner."))
+                    getPlayer?.addPotionEffects(
+                        mutableListOf(
+                            PotionEffect(
+                                PotionEffectType.GLOWING,
+                                duration * 20,
+                                20,
+                                true
+                            )
                         )
                     )
-                )
 
-                playerCount++
-            }
-        }
-
-        when {
-            playerCount > 1 -> {
-                player.sendActionBar(Component.text("[Scanner] ${ChatColor.GREEN}$playerCount people detected."))
+                    playerCount++
+                }
             }
 
-            playerCount == 0 -> {
-                player.sendActionBar(Component.text("[Scanner] ${ChatColor.GOLD}Not detected by the scanner."))
+            when {
+                playerCount > 1 -> {
+                    player.sendActionBar(Component.text("[Scanner] ${ChatColor.GREEN}$playerCount people detected."))
+                }
+
+                playerCount == 0 -> {
+                    player.sendActionBar(Component.text("[Scanner] ${ChatColor.GOLD}Not detected by the scanner."))
+                }
+
+                else -> {
+                    player.sendActionBar(Component.text("[Scanner] ${ChatColor.GREEN}$playerCount person detected."))
+                }
             }
 
-            else -> {
-                player.sendActionBar(Component.text("[Scanner] ${ChatColor.GREEN}$playerCount person detected."))
-            }
+            Bukkit.getScheduler().runTaskLater(plugin, Runnable {
+                plugin.weaponConfig().set("weapon.${player.name}.enabled", false)
+            }, (duration * 5).toLong())
+        } else {
+            player.sendMessage("<Skill_Manager> ${ChatColor.GOLD}You can use the skill 5 seconds from the time you use it.")
         }
     }
 }
