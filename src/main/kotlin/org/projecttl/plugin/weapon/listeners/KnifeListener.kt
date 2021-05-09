@@ -20,14 +20,10 @@ class KnifeListener(private val plugin: WeaponPlugin): Listener {
         val skills = Skills(plugin)
 
         if (action == Action.RIGHT_CLICK_AIR || action == Action.RIGHT_CLICK_BLOCK) {
-            if (mainHand.type == Knife(plugin).itemStack().type && mainHand.itemMeta.lore() == Knife(plugin).itemLore()) {
-                if (mainHand.itemMeta.displayName() == Component.text(Knife(plugin).itemName()) && mainHand.itemMeta.customModelData == Knife(plugin).customModelData()) {
-                    if (!player.isOp) {
-                        if (player.name == WeaponPlugin.target) {
-                            skills.powerBooster(player)
-                        }
-                    } else {
-                        skills.findPlayer(player, 20)
+            if (mainHand.type == Knife().itemStack().type && mainHand.itemMeta.lore() == Knife().itemLore()) {
+                if (mainHand.itemMeta.displayName() == Component.text(Knife().itemName()) && mainHand.itemMeta.customModelData == Knife().customModelData()) {
+                    if (player.name == WeaponPlugin.target) {
+                        skills.powerBooster(player)
                     }
                 }
             }

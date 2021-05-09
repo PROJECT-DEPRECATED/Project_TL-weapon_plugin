@@ -23,7 +23,7 @@ class Skills(private val plugin: WeaponPlugin) {
             plugin.weaponConfig().set("weapon.cooldown", true)
 
             player.run {
-                setCooldown(Knife(plugin).itemStack().type, 0)
+                setCooldown(Knife().itemStack().type, 0)
                 playSound(player.location, Sound.ITEM_TOTEM_USE, 100F, 100F)
             }
 

@@ -7,6 +7,8 @@ import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import org.projecttl.plugin.weapon.WeaponPlugin
 import org.projecttl.plugin.weapon.utils.Knife
+import org.projecttl.plugin.weapon.utils.SuitScanner
+import java.util.*
 
 class SpawnWeapon(private val plugin: WeaponPlugin): CommandExecutor {
 
@@ -25,7 +27,12 @@ class SpawnWeapon(private val plugin: WeaponPlugin): CommandExecutor {
                         if (sender.isOp) {
                             when (args[0]) {
                                 "knife" -> {
-                                    Knife(plugin).giveItem(sender)
+                                    Knife().giveItem(sender)
+                                    return true
+                                }
+
+                                "scanner" -> {
+                                    SuitScanner().giveItem(sender)
                                     return true
                                 }
                             }

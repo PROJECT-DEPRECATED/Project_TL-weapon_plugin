@@ -8,7 +8,7 @@ import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import org.projecttl.plugin.weapon.WeaponPlugin
 
-class Knife(private val plugin: WeaponPlugin) {
+class Knife {
     private val itemType: ItemStack = ItemStack(Material.DIAMOND_SWORD)
     private val itemName = "${ChatColor.YELLOW}Project_TL's Knife"
     private val itemLore = listOf<Component>(Component.text("${ChatColor.GREEN}This is Project_TL's Knife"))

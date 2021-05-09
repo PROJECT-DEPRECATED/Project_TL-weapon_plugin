@@ -22,6 +22,7 @@ class ArgumentSpawnWeapon: TabCompleter {
                         commandList.add("default")
                         commandList.add("duration")
                         commandList.add("knife")
+                        commandList.add("scanner")
 
                         return commandList
                     }

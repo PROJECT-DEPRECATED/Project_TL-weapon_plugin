@@ -6,6 +6,7 @@ import org.bukkit.plugin.java.JavaPlugin
 import org.projecttl.plugin.weapon.commands.SpawnWeapon
 import org.projecttl.plugin.weapon.commands.arguments.ArgumentSpawnWeapon
 import org.projecttl.plugin.weapon.listeners.KnifeListener
+import org.projecttl.plugin.weapon.listeners.SuitScannerListener
 import java.io.File
 
 class WeaponPlugin: JavaPlugin() {
@@ -27,7 +28,10 @@ class WeaponPlugin: JavaPlugin() {
             it.tabCompleter = ArgumentSpawnWeapon()
         }
 
-        manager.registerEvents(KnifeListener(this), this)
+        manager.also {
+            it.registerEvents(KnifeListener(this), this)
+            it.registerEvents(SuitScannerListener(this), this)
+        }
     }
 
     override fun onDisable() {
