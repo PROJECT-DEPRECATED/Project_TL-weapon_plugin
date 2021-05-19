@@ -30,7 +30,7 @@ class WeaponPlugin: JavaPlugin() {
 
         manager.also {
             it.registerEvents(KnifeListener(this), this)
-            it.registerEvents(SuitScannerListener(this), this)
+            it.registerEvents(SuitListener(this), this)
         }
     }
 
