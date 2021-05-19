@@ -10,7 +10,7 @@ import org.projecttl.plugin.weapon.WeaponPlugin
 import org.projecttl.plugin.weapon.utils.Skills
 import org.projecttl.plugin.weapon.utils.SuitScanner
 
-class SuitScannerListener(private val plugin: WeaponPlugin): Listener {
+class SuitListener(private val plugin: WeaponPlugin): Listener {
 
     @EventHandler
     fun onEvent(event: PlayerInteractEvent) {
@@ -19,10 +19,21 @@ class SuitScannerListener(private val plugin: WeaponPlugin): Listener {
 
         val skills = Skills(plugin)
 
-        if (player.inventory.chestplate?.type == SuitScanner().itemStack().type
-            && player.inventory.chestplate?.itemMeta?.displayName() == Component.text(SuitScanner().itemName())
-            && player.inventory.chestplate?.itemMeta?.lore() == SuitScanner().itemLore()
-            && player.inventory.chestplate?.itemMeta?.customModelData == SuitScanner().customModelData()) {
+        /* Check Chest Plate START */
+
+        if (player.inventory.chestplate?.type != SuitScanner().itemStack().type) {
+            return
+        } else if (player.inventory.chestplate?.itemMeta?.displayName() != Component.text(SuitScanner().itemName())) {
+            return
+        } else if (player.inventory.chestplate?.itemMeta?.lore() != SuitScanner().itemLore()) {
+            return
+        } else if (player.inventory.chestplate?.itemMeta?.customModelData != SuitScanner().customModelData()) {
+            return
+        }
+
+        /* Check Chest Plate END */
+        
+        else {
             if (player.name == WeaponPlugin.target) {
                 if (action == Action.RIGHT_CLICK_AIR && player.inventory.itemInMainHand.type == Material.CLOCK) {
                     skills.findPlayer(player, 20)
